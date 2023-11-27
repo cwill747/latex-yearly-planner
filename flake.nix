@@ -48,8 +48,6 @@
               ifmtarg
               extsizes
               dashrule
-              fontenc
-              FiraSans
               tcolorbox
               geometry
               fancyhdr
@@ -87,7 +85,9 @@
               chmod +x *.sh
               PLANNERGEN_BINARY=plannergen eval $PWD/build.sh
               mkdir $out
-              cp *.pdf $out/.
+              for file in *.pdf; do
+                cp $file $out/$file
+              done
             '';
           };
 
