@@ -26,7 +26,6 @@
 \usepackage[sfdefault]{FiraSans}
 \usepackage[T1]{fontenc}
 \usepackage[most]{tcolorbox}
-\usepackage{geometry}
 \usepackage{fancyhdr}
 
 \hypersetup{
