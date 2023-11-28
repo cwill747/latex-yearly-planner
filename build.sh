@@ -21,7 +21,6 @@ BUILDER_PID=$!
 tail --pid=$BUILDER_PID -f /tmp/$NAME.log | python3 parser.py &
 OUTPUT_PID=$!
 
-
 _exit() {
     if [[ "${STATUS_BUILDER}" -eq 0 && "${STATUS_OUTPUT}" -eq 0 ]]; then
         echo "✅"

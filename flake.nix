@@ -17,7 +17,7 @@
           vendorSha256 = "sha256:F3cln/CPSAonLTCvjSCMHhrzEQgWIOWw0vWwb6BG+pI=";
         };
 
-        # Go is packaged into the devShell for developing the package, 
+        # Go is packaged into the devShell for developing the package,
         # but is not used for the "nix build" outputs - these use the pre-built
         # binary instead
         goDeps = [
@@ -48,6 +48,9 @@
               ifmtarg
               extsizes
               dashrule
+              tcolorbox
+              geometry
+              fancyhdr
               ;
           })
         ];
@@ -82,7 +85,9 @@
               chmod +x *.sh
               PLANNERGEN_BINARY=plannergen eval $PWD/build.sh
               mkdir $out
-              cp *.pdf $out/.
+              for file in *.pdf; do
+                cp $file $out/$file
+              done
             '';
           };
 
