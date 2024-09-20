@@ -27,19 +27,19 @@ jobs:
     - name: Set planner year
       run: |-
         echo "PLANNER_YEAR=$(
-        if ${{ github.event.inputs.year }}; then
-          echo ${{ github.event.inputs.year }}
+        if [ ! -z "${{ github.event.inputs.year }}" ]; then
+          echo "${{ github.event.inputs.year }}"
         else
-          echo ${{ env.year }}
+          echo "${{ env.year }}"
         fi
         )" >> $GITHUB_ENV
     - name: Set Config
       run: |-
         echo "CFG=$(
-        if ${{ github.event.inputs.cfg }}; then
-          echo ${{ github.event.inputs.cfg }}
+        if [ ! -z "${{ github.event.inputs.cfg }}" ]; then
+          echo "${{ github.event.inputs.cfg }}"
         else
-          echo ${{ env.cfg }}
+          echo "${{ env.cfg }}"
         fi
         )" >> $GITHUB_ENV
     - name: Set up Go
