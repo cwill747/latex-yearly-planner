@@ -41,5 +41,5 @@ jobs:
     - name: Compile LaTeX document
       uses: dante-ev/latex-action@latest
       with:
-        root_file: ${{ steps.filename.outputs.FILENAME }}
+        root_file: out/${{ steps.filename.outputs.FILENAME }}.tex
         args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-output-directory=./out
