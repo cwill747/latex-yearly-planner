@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  cmd: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+  planner_year: 2024
+
 jobs:
 
   build:
@@ -28,18 +32,23 @@ jobs:
       run: go test -v ./...
 
     - name: Create latex docs
-      run: go run ./cmd/plannergen/plannergen.go --config "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+      run: go run ./cmd/plannergen/plannergen.go --config "${{env.cfg}}"
       env:
-        PLANNER_YEAR: 2024
+        PLANNER_YEAR: "${{env.planner_year}}"
 
     - name: Get latex filename
-      run: echo "FILENAME=$(echo "${CFG}" | rev | cut -d, -f1 | cut -d'/' -f 1 | cut -d'.' -f 2-99 | rev)" >> $GITHUB_OUTPUT
+      run: echo "FILENAME=$(echo "${{env.cfg}}" | rev | cut -d, -f1 | cut -d'/' -f 1 | cut -d'.' -f 2-99 | rev)" >> $GITHUB_OUTPUT
       id: filename
-      env:
-        CFG: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
 
     - name: Compile LaTeX document
       uses: dante-ev/latex-action@latest
       with:
         root_file: out/${{ steps.filename.outputs.FILENAME }}.tex
         args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-output-directory=./out
+
+    - name: Output PDFs
+      uses: actions/upload-artifact@v4
+      with:
+        name: result
+        path: out/*.pdf
+        if-no-files-found: error
