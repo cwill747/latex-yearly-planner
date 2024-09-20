@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 env:
-  cmd: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+  cfg: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
   planner_year: 2024
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
       uses: dante-ev/latex-action@latest
       with:
         root_file: out/${{ steps.filename.outputs.FILENAME }}.tex
-        args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-output-directory=./out
+        args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-output-directory=./out -latexoption=-auxdir=./out/
 
     - name: Output PDFs
       uses: actions/upload-artifact@v4
