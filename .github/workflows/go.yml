@@ -26,3 +26,20 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: Create latex docs
+      run: go run ./cmd/plannergen/plannergen.go --config "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+      env:
+        PLANNER_YEAR: 2024
+
+    - name: Get latex filename
+      run: echo "FILENAME=$(echo "${CFG}" | rev | cut -d, -f1 | cut -d'/' -f 1 | cut -d'.' -f 2-99 | rev)" >> $GITHUB_OUTPUT
+      id: filename
+      env:
+        CFG: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+
+    - name: Compile LaTeX document
+      uses: dante-ev/latex-action@latest
+      with:
+        root_file: ${{ steps.filename.outputs.FILENAME }}
+        args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-output-directory=./out
