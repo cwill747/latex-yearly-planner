@@ -1,6 +1,10 @@
 name: Create Planner
 
 on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       year:
@@ -10,13 +14,34 @@ on:
         type: string
         description: Configuration string to build. See README for details.
 
+env:
+  cfg: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+  year: 2024
+
 jobs:
 
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
+    - name: Set planner year
+      run: |-
+        echo "PLANNER_YEAR=$(
+        if ${{ github.event.inputs.year }}; then
+          echo ${{ github.event.inputs.year }}
+        else
+          echo ${{ env.year }}
+        fi
+        )" >> $GITHUB_ENV
+    - name: Set Config
+      run: |-
+        echo "CFG=$(
+        if ${{ github.event.inputs.cfg }}; then
+          echo ${{ github.event.inputs.cfg }}
+        else
+          echo ${{ env.cfg }}
+        fi
+        )" >> $GITHUB_ENV
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
@@ -29,12 +54,12 @@ jobs:
       run: go test -v ./...
 
     - name: Create latex docs
-      run: go run ./cmd/plannergen/plannergen.go --config "${{inputs.cfg}}"
+      run: go run ./cmd/plannergen/plannergen.go --config "${{env.CFG}}"
       env:
-        PLANNER_YEAR: "${{inputs.year}}"
+        PLANNER_YEAR: "${{env.PLANNER_YEAR}}"
 
     - name: Get latex filename
-      run: echo "FILENAME=$(echo "${{inputs.cfg}}" | rev | cut -d, -f1 | cut -d'/' -f 1 | cut -d'.' -f 2-99 | rev)" >> $GITHUB_OUTPUT
+      run: echo "FILENAME=$(echo "${{env.CFG}}" | rev | cut -d, -f1 | cut -d'/' -f 1 | cut -d'.' -f 2-99 | rev)" >> $GITHUB_OUTPUT
       id: filename
 
     - name: Compile LaTeX document
