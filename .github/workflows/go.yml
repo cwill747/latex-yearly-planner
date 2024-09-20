@@ -43,8 +43,9 @@ jobs:
     - name: Compile LaTeX document
       uses: dante-ev/latex-action@latest
       with:
-        root_file: out/${{ steps.filename.outputs.FILENAME }}.tex
-        args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -latexoption=-output-directory=./out -latexoption=-auxdir=./out/
+        working_directory: out
+        root_file: ${{ steps.filename.outputs.FILENAME }}.tex
+        args: -xelatex -latexoption=-file-line-error -latexoption=-interaction=nonstopmode
 
     - name: Output PDFs
       uses: actions/upload-artifact@v4
