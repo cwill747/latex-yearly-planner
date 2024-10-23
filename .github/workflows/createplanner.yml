@@ -16,7 +16,7 @@ on:
 
 env:
   cfg: "cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
-  year: 2024
+  year: 2025
 
 jobs:
 
