@@ -30,3 +30,4 @@ layout:
     lineheightbutline: \dimexpr7mm-.4pt
   colors:
     lightgray: gray!70
+    dots: black
