@@ -23,8 +23,9 @@
 \usepackage{marginnote}
 \usepackage{adjustbox}
 \usepackage{multido}
-\usepackage[sfdefault]{FiraSans}
 \usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\setmainfont{TX-02-Condensed.ttf}
 \usepackage[most]{tcolorbox}
 \usepackage{geometry}
 \usepackage{fancyhdr}
