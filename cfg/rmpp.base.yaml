@@ -1,12 +1,8 @@
-cleartoprightcorner: true
-cleartopleftcorner: true
-
 layout:
   paper:
     width: 19.6cm
     height: 27.4cm
 
-    marginparsep: 4.5mm
 
     margin:
       top: 0cm
