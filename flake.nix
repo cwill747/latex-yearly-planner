@@ -29,6 +29,7 @@
           libuuid # for the "rev" utility
           ps # Used by build.sh
           python3 # used in the build scripts
+          fira # FiraSans font
           (texlive.combine {
             inherit (texlive)
               metafont
@@ -48,6 +49,11 @@
               ifmtarg
               extsizes
               dashrule
+              fontspec
+              tcolorbox
+              environ
+              tikzfill
+              pdfcol
               ;
           })
         ];
@@ -59,9 +65,15 @@
             unset GOPATH
             unset GOROOT
             unset GO_VERSION
+            
+            # Make fonts available to fontconfig
+            export FONTCONFIG_FILE=${pkgs.makeFontsConf {
+              fontDirectories = [ pkgs.fira ];
+            }}
           '';
           buildInputs = [
             pkgs.nixpkgs-fmt # utility for pretty formatting of .nix files
+            pkgs.fontconfig # For font management
           ] ++ goDeps ++ texDeps;
         };
 
