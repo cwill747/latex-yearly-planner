@@ -13,28 +13,33 @@ Use the [GitHub workflow](https://github.com/cwill747/latex-yearly-planner/actio
 
 ### Local Development Commands
 
+**IMPORTANT: Use Nix for development environment:**
+```bash
+nix develop
+```
+
 **Build a planner:**
 ```bash
-PLANNER_YEAR=2025 PASSES=1 CFG="cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml" NAME="rmpp.breadcrumb" ./single.sh
+nix develop -c bash -c "PLANNER_YEAR=2025 PASSES=1 CFG='cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml' NAME='rmpp.breadcrumb' ./single.sh"
 ```
 
 **Quick build with default config:**
 ```bash
-./build.sh 2025
+nix develop -c ./build.sh 2025
 ```
 
 **Device-specific shortcuts:**
-- reMarkable 2: `./rm2.sh`  
-- reMarkable Paper Pro: `./rmpp.sh`
+- reMarkable 2: `nix develop -c ./rm2.sh`  
+- reMarkable Paper Pro: `nix develop -c ./rmpp.sh`
 
 **Run tests:**
 ```bash
-go test ./app/components/cal/
+nix develop -c go test ./app/components/cal/
 ```
 
 **Build the Go binary:**
 ```bash
-go build -o plannergen cmd/plannergen/plannergen.go
+nix develop -c go build -o plannergen cmd/plannergen/plannergen.go
 ```
 
 ## Dependencies
