@@ -6,6 +6,9 @@ dotted: true
 calafterschedule: false
 addlasthalfhour: true
 scheduleincludeworkinghours: true
+weeklycalendarchecktodo: false
+weeklycalendarchecktododay: 1
+monthlycalendarchecktodo: false
 
 layout:
   paper:

@@ -21,6 +21,9 @@ type Config struct {
 	AMPMTime                    bool
 	AddLastHalfHour             bool
 	ScheduleIncludeWorkingHours bool
+	WeeklyCalendarCheckTodo     bool
+	WeeklyCalendarCheckTodoDay  time.Weekday
+	MonthlyCalendarCheckTodo    bool
 	Pages                       Pages
 	Example                     bool
 	Layout                      Layout

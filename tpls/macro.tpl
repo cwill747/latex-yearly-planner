@@ -103,6 +103,7 @@
 
 \newcommand{\myTodo}{\myLineHeightButLine$\square$\myLinePlain}
 \newcommand{\myTodoLineGray}{\myLineHeightButLine$\square$\myLineGray}
+\newcommand{\myTodoLineFilled}[1]{\myLineHeightButLine$\square$ #1\myLineGray}
 
 \newcommand{\myDotGrid}[2]{\leavevmode\multido{\dC=0mm+\myLenLineHeightButLine}{#1}{\multido{\dR=0mm+\myLenLineHeightButLine}{#2}{\put(\dR,\dC){\color{\myColorDots}\circle*{0.1}}}}}
 
