@@ -33,7 +33,7 @@
           (texlive.combine {
             inherit (texlive)
               metafont
-              scheme-small
+              scheme-medium  # Updated from scheme-small for better coverage
               xcolor
               pgf
               wrapfig
@@ -54,6 +54,8 @@
               environ
               tikzfill
               pdfcol
+              l3kernel     # Modern LaTeX3 kernel
+              l3packages   # LaTeX3 packages including xparse functionality
               ;
           })
         ];
