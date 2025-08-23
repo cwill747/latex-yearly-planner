@@ -23,21 +23,28 @@ func DailyStuff(prefix, leaf string) func(cfg config.Config, tpls []string) (pag
 							continue
 						}
 
+						// Check if this is the weekly reminder day (configured separately from WeekStart)
+						isWeeklyReminderDay := day.Time.Weekday() == cfg.WeeklyCalendarCheckTodoDay
+						// Check if this is first day of month
+						isFirstDayOfMonth := day.Time.Day() == 1
+
 						modules = append(modules, page.Module{
 							Cfg: cfg,
 							Tpl: tpls[0],
 							Body: map[string]interface{}{
-								"Year":         year,
-								"Quarter":      quarter,
-								"Month":        month,
-								"Week":         week,
-								"Day":          day,
-								"Breadcrumb":   day.Breadcrumb(prefix, leaf, cfg.ClearTopRightCorner && len(leaf) > 0),
-								"HeadingMOS":   day.HeadingMOS(prefix, leaf),
-								"SideQuarters": year.SideQuarters(day.Quarter()),
-								"SideMonths":   year.SideMonths(day.Month()),
-								"Extra":        day.PrevNext(prefix).WithTopRightCorner(cfg.ClearTopRightCorner),
-								"Extra2":       extra2(cfg.ClearTopRightCorner, false, false, week, 0),
+								"Year":             year,
+								"Quarter":          quarter,
+								"Month":            month,
+								"Week":             week,
+								"Day":              day,
+								"IsWeeklyReminderDay": isWeeklyReminderDay,
+								"IsFirstDayOfMonth": isFirstDayOfMonth,
+								"Breadcrumb":       day.Breadcrumb(prefix, leaf, cfg.ClearTopRightCorner && len(leaf) > 0),
+								"HeadingMOS":       day.HeadingMOS(prefix, leaf),
+								"SideQuarters":     year.SideQuarters(day.Quarter()),
+								"SideMonths":       year.SideMonths(day.Month()),
+								"Extra":            day.PrevNext(prefix).WithTopRightCorner(cfg.ClearTopRightCorner),
+								"Extra2":           extra2(cfg.ClearTopRightCorner, false, false, week, 0),
 							},
 						})
 					}

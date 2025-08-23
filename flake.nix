@@ -29,10 +29,11 @@
           libuuid # for the "rev" utility
           ps # Used by build.sh
           python3 # used in the build scripts
+          fira # FiraSans font
           (texlive.combine {
             inherit (texlive)
               metafont
-              scheme-small
+              scheme-medium  # Updated from scheme-small for better coverage
               xcolor
               pgf
               wrapfig
@@ -48,6 +49,13 @@
               ifmtarg
               extsizes
               dashrule
+              fontspec
+              tcolorbox
+              environ
+              tikzfill
+              pdfcol
+              l3kernel     # Modern LaTeX3 kernel
+              l3packages   # LaTeX3 packages including xparse functionality
               ;
           })
         ];
@@ -59,9 +67,15 @@
             unset GOPATH
             unset GOROOT
             unset GO_VERSION
+            
+            # Make fonts available to fontconfig
+            export FONTCONFIG_FILE=${pkgs.makeFontsConf {
+              fontDirectories = [ pkgs.fira ];
+            }}
           '';
           buildInputs = [
             pkgs.nixpkgs-fmt # utility for pretty formatting of .nix files
+            pkgs.fontconfig # For font management
           ] ++ goDeps ++ texDeps;
         };
 

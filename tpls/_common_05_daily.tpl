@@ -1,6 +1,8 @@
 {{- $today := .Body.Day -}}
 \begin{minipage}[t]{\myLenChosenColLargeContent+\myLenChosenColSep}
   \myUnderline{Todo\myDummyQ}
+  {{- if and .Cfg.WeeklyCalendarCheckTodo .Body.IsWeeklyReminderDay -}}\myTodoLineFilled{Check Weekly Calendar View}{{- end -}}
+  {{- if and .Cfg.MonthlyCalendarCheckTodo .Body.IsFirstDayOfMonth -}}\myTodoLineFilled{Check Monthly Calendar View}{{- end -}}
   \Repeat{\myNumDailyTodos}{\myTodoLineGray}
   \vskip\dimexpr5.4mm
   \myUnderline{Notes \textcolor{\myColorGray}{$\vert$ {{ $today.LinkLeaf "More" "More" }}\hfill{}{{ $today.LinkLeaf "Reflect" "Reflect" }}\hfill{}\hyperlink{Notes Index}{Notes} $\vert$ \hyperlink{Meetings Index}{Meetings}}}

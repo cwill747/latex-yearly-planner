@@ -2,8 +2,8 @@
 \cs_new_eq:NN \Repeat \prg_replicate:nn
 \ExplSyntaxOff
 
-\newcommand{\myMinLineHeight}[1]{\parbox{0pt}{\vskip#1}}
-\newcommand{\myDummyQ}{\textcolor{white}{Q}}
+\NewDocumentCommand{\myMinLineHeight}{m}{\parbox{0pt}{\vskip#1}}
+\NewDocumentCommand{\myDummyQ}{}{\textcolor{white}{Q}}
 
 {{- $numbers := .Cfg.Layout.Numbers -}}
 \newcommand{\myNumArrayStretch}{ {{- $numbers.ArrayStretch -}} }
@@ -94,31 +94,32 @@
 \newcommand{\myLineThick}{\hrule width \linewidth height \myLenLineThicknessThick}
 
 \newcommand{\myLineHeightButLine}{\myMinLineHeight{\myLenLineHeightButLine}}
-\newcommand{\myUnderline}[1]{#1\vskip1mm\myLineThick\par}
-\newcommand{\myLineColor}[1]{\textcolor{#1}{\myLinePlain}}
-\newcommand{\myLineGray}{\myLineColor{\myColorGray}}
-\newcommand{\myLineLightGray}{\myLineColor{\myColorLightGray}}
-\newcommand{\myLineGrayVskipBottom}{\myLineGray\vskip\myLenLineHeightButLine}
-\newcommand{\myLineGrayVskipTop}{\vskip\myLenLineHeightButLine\myLineGray}
+\NewDocumentCommand{\myUnderline}{m}{#1\vskip1mm\myLineThick\par}
+\NewDocumentCommand{\myLineColor}{m}{\textcolor{#1}{\myLinePlain}}
+\NewDocumentCommand{\myLineGray}{}{\myLineColor{\myColorGray}}
+\NewDocumentCommand{\myLineLightGray}{}{\myLineColor{\myColorLightGray}}
+\NewDocumentCommand{\myLineGrayVskipBottom}{}{\myLineGray\vskip\myLenLineHeightButLine}
+\NewDocumentCommand{\myLineGrayVskipTop}{}{\vskip\myLenLineHeightButLine\myLineGray}
 
-\newcommand{\myTodo}{\myLineHeightButLine$\square$\myLinePlain}
-\newcommand{\myTodoLineGray}{\myLineHeightButLine$\square$\myLineGray}
+\NewDocumentCommand{\myTodo}{}{\myLineHeightButLine$\square$\myLinePlain}
+\NewDocumentCommand{\myTodoLineGray}{}{\myLineHeightButLine$\square$\myLineGray}
+\NewDocumentCommand{\myTodoLineFilled}{m}{\myLineHeightButLine$\square$ #1\myLineGray}
 
-\newcommand{\myDotGrid}[2]{\leavevmode\multido{\dC=0mm+\myLenLineHeightButLine}{#1}{\multido{\dR=0mm+\myLenLineHeightButLine}{#2}{\put(\dR,\dC){\color{\myColorDots}\circle*{0.1}}}}}
+\NewDocumentCommand{\myDotGrid}{mm}{\leavevmode\multido{\dC=0mm+\myLenLineHeightButLine}{#1}{\multido{\dR=0mm+\myLenLineHeightButLine}{#2}{\put(\dR,\dC){\color{\myColorDots}\circle*{0.1}}}}}
 
-\newcommand{\myMash}[3][]{
-  {{- if $.Cfg.Dotted -}} \vskip\myLenLineHeightButLine#1\myDotGrid{#2}{#3} {{- else -}} \Repeat{#2}{\myLineGrayVskipTop} {{- end -}}
+\NewDocumentCommand{\myMash}{O{}mm}{%
+  \vskip\myLenLineHeightButLine#1\myDotGrid{#2}{#3}%
 }
 
-\newcommand{\remainingHeight}{%
+\NewDocumentCommand{\remainingHeight}{}{%
   \ifdim\pagegoal=\maxdimen
-  \dimexpr\textheight-9.4pt\relax
+    \dimexpr\textheight-9.4pt\relax
   \else
-  \dimexpr\pagegoal-\pagetotal-\lineskip-9.4pt\relax
+    \dimexpr\pagegoal-\pagetotal-\lineskip-9.4pt\relax
   \fi%
 }
 
-\newcommand{\remainingHeightInLines}{%
+\NewDocumentCommand{\remainingHeightInLines}{}{%
   \dimexpr\remainingHeight/\myLenLineHeightButLine\relax
 }
 
@@ -196,7 +197,7 @@
 }% \colorfillwithlines
 \def\nocolorfillwithlines{\@colorfillwithlinesfalse}
 
-\newcommand\fillwithlines[1]{%
+\NewDocumentCommand\fillwithlines{m}{%
   \if@colorfillwithlines
     \color@begingroup
       \color{FillWithLinesColor}%
@@ -207,7 +208,7 @@
   \fi
 }% \fillwithlines
 
-\newcommand\linefill{\leavevmode
+\NewDocumentCommand\linefill{}{\leavevmode
     \leaders\hrule height \linefillthickness \hfill\kern\z@}
 
 % \do@fillwithlines is called only by \fillwithlines
@@ -295,7 +296,7 @@
 }% \colorfillwithdottedlines
 \def\nocolorfillwithdottedlines{\@colorfillwithdottedlinesfalse}
 
-\newcommand\fillwithdottedlines[1]{%
+\NewDocumentCommand\fillwithdottedlines{m}{%
   \if@colorfillwithdottedlines
     \color@begingroup
       \color{FillWithDottedLinesColor}%
@@ -366,7 +367,7 @@
 % a new \definecolor command.
 
 \newif\if@colorgrids
-\newcommand\colorgrids{%
+\NewDocumentCommand\colorgrids{}{%
   \@ifundefined{definecolor}
   {%
     \ClassError{exam}{%
@@ -384,7 +385,7 @@
     \@colorgridstrue
   }%
 }% \colorgrids
-\newcommand\nocolorgrids{\@colorgridsfalse}
+\NewDocumentCommand\nocolorgrids{}{\@colorgridsfalse}
 \nocolorgrids
 
 \newlength\gridsize
