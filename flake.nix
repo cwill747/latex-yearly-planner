@@ -65,6 +65,10 @@
             # Minimal set of dependencies to build the pdfs
             # Latex, "rev" and the built plannergen binary
             buildInputs = texDeps ++ [ plannergen ];
+            # Let fontconfig find the Fira Sans font in the sandbox.
+            FONTCONFIG_FILE = pkgs.makeFontsConf {
+              fontDirectories = [ pkgs.fira ];
+            };
             src = "${self}";
             buildCommand = ''
               cp -r $src/* .
