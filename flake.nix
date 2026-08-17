@@ -68,14 +68,16 @@
               fontDirectories = [ pkgs.fira ];
             };
             src = "${self}";
-            # The sandbox permits "date", so the planners follow the
-            # real year. The derivation is not reproducible, but CI
-            # runners carry no cache, so each run builds fresh.
+            # currentTime is read at evaluation time, not inside the
+            # sandbox. It becomes part of the derivation, so a cache
+            # from a previous year cannot serve stale PDFs; a fresh
+            # build runs whenever the eval-time year moves on.
+            CURRENT_TIME = builtins.currentTime;
             buildCommand = ''
               cp -r $src/* .
               patchShebangs .
               chmod -R 770 *
-              year=$(date +%Y)
+              year=$(date -u -d "@$CURRENT_TIME" +%Y)
               for device in rmpp rm2; do
                 for y in $year $((year + 1)); do
                   PLANNERGEN_BINARY=plannergen ./build.sh "$device" "$y"
