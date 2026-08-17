@@ -14,12 +14,9 @@ layout:
     marginparsep: 3mm
 
   lengths:
-    quarterlyspring: \textcolor{white}{.}
 
   numbers:
     dailytodos: 6
-    dailynotes: 29
-    dailydiarygoals: 10
     dailydiarygrateful: 2
     dailydiarybest: 2
     dailydiarylog: 30
