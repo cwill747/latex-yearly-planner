@@ -26,9 +26,7 @@
 
         # Dependencies for building the latex files
         texDeps = with pkgs; [
-          libuuid # for the "rev" utility
-          ps # Used by build.sh
-          python3 # used in the build scripts
+          python3 # used by translate.py
           fira # FiraSans font
           (texlive.combine {
             inherit (texlive)
@@ -62,22 +60,31 @@
         pdfs = pkgs.stdenv.mkDerivation
           {
             name = "pdfs";
-            # Minimal set of dependencies to build the pdfs
-            # Latex, "rev" and the built plannergen binary
+            # Minimal set of dependencies to build the pdfs:
+            # latex and the built plannergen binary
             buildInputs = texDeps ++ [ plannergen ];
             # Let fontconfig find the Fira Sans font in the sandbox.
             FONTCONFIG_FILE = pkgs.makeFontsConf {
               fontDirectories = [ pkgs.fira ];
             };
             src = "${self}";
+            # currentTime is read at evaluation time, not inside the
+            # sandbox. It becomes part of the derivation, so a cache
+            # from a previous year cannot serve stale PDFs; a fresh
+            # build runs whenever the eval-time year moves on.
+            CURRENT_TIME = builtins.currentTime;
             buildCommand = ''
               cp -r $src/* .
               patchShebangs .
               chmod -R 770 *
-              chmod +x *.sh
-              PLANNERGEN_BINARY=plannergen ./build.sh
+              year=$(date -u -d "@$CURRENT_TIME" +%Y)
+              for device in rmpp rm2; do
+                for y in $year $((year + 1)); do
+                  PLANNERGEN_BINARY=plannergen ./build.sh "$device" "$y"
+                done
+              done
               mkdir $out
-              cp *.pdf $out/.
+              cp *.pdf $out/
             '';
           };
       in
