@@ -33,25 +33,12 @@
               metafont
               scheme-medium  # Updated from scheme-small for better coverage
               xcolor
-              pgf
-              wrapfig
-              makecell
               multirow
-              leading
               marginnote
               adjustbox
-              multido
-              varwidth
-              blindtext
-              setspace
               ifmtarg
               extsizes
-              dashrule
               fontspec
-              tcolorbox
-              environ
-              tikzfill
-              pdfcol
               l3kernel     # Modern LaTeX3 kernel
               l3packages   # LaTeX3 packages including xparse functionality
               ;

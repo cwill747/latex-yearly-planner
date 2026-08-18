@@ -13,20 +13,15 @@ layout:
       right: 0cm
 
   numbers:
-    quarterlylines: 38
     weeklylines: 11
     dailybottomhour: 6
     dailytophour: 23
     dailytodos: 5
-    dailynotes: 31
     dailydiarygrateful: 4
     dailydiarybest: 4
     dailydiarylog: 26
     notesindexpages: 3
     notesonpage: 38
-    dotheightfull: 40
-    dotwidthtwothirds: 21
-    dotwidthfull: 31
 
   lengths:
     notesindexcellheight: 1.45cm
