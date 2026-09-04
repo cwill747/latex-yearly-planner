@@ -1,12 +1,20 @@
 {
   description = "Install latex reqs";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, flake-utils }:
+    font-flake = {
+      url = "git+ssh://gitea@git-ssh.thewills.net:37083/cameron/font-flake.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, flake-utils, font-flake }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        tx02 = font-flake.packages.${system}.tx02;
 
         # Build the plannergen as a binary using fixed input versions
         # This means that the subsequent pdf generation does not need internet access
@@ -27,8 +35,8 @@
         # Dependencies for building the latex files
         texDeps = with pkgs; [
           python3 # used by translate.py
-          fira # FiraSans font
           qpdf # linearize PDFs for faster page access on e-ink devices
+          tx02
           (texlive.combine {
             inherit (texlive)
               metafont
@@ -51,10 +59,11 @@
             # Minimal set of dependencies to build the pdfs:
             # latex and the built plannergen binary
             buildInputs = texDeps ++ [ plannergen ];
-            # Let fontconfig find the Fira Sans font in the sandbox.
+            # Let fontconfig find TX-02 in the sandbox.
             FONTCONFIG_FILE = pkgs.makeFontsConf {
-              fontDirectories = [ pkgs.fira ];
+              fontDirectories = [ tx02 ];
             };
+            OSFONTDIR = "${tx02}/share/fonts/truetype//";
             src = "${self}";
             # currentTime is read at evaluation time, not inside the
             # sandbox. It becomes part of the derivation, so a cache
@@ -90,8 +99,9 @@
 
             # Make fonts available to fontconfig
             export FONTCONFIG_FILE=${pkgs.makeFontsConf {
-              fontDirectories = [ pkgs.fira ];
+              fontDirectories = [ tx02 ];
             }}
+            export OSFONTDIR=${tx02}/share/fonts/truetype//
           '';
           buildInputs = [
             pkgs.nixpkgs-fmt # utility for pretty formatting of .nix files
