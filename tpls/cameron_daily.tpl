@@ -2,7 +2,7 @@
 {{ template "breadcrumb_00_header.tpl" dict "Cfg" .Cfg "Body" .Body }}
 \ifdefined\myCalendarBox\else\newsavebox{\myCalendarBox}\fi
 \begin{lrbox}{\myCalendarBox}
-  \begin{minipage}[b]{\dimexpr\myLenChosenCol-2mm}
+  \begin{minipage}[b]{\myLenChosenCol}
     {{- if .Cfg.CalAfterSchedule }}
     {{- template "monthTabularV2.tpl" dict "Month" .Body.Month "Today" $today -}}
     {{- end }}
@@ -18,7 +18,7 @@
 \edef\myDailyNotesHeight{\the\dimexpr\remainingHeight\relax}
 \begin{minipage}[t][\myDailyNotesHeight][b]{\linewidth}
   \smash{\makebox[0pt][l]{\begin{minipage}[b][\myDailyNotesHeight][t]{\linewidth}
-    \myDotFill{\fill}
+    \myDotFill[2]{\fill}
   \end{minipage}}}%
   \hfill\raisebox{\dp\myCalendarBox}{\colorbox{white}{\usebox{\myCalendarBox}}}
 \end{minipage}%
