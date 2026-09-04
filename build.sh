@@ -105,6 +105,7 @@ latexmk -xelatex \
 
 # Put each page near the objects that it references. This reduces random access
 # when resource-constrained PDF readers open and render the planner.
-qpdf --linearize "out/${root}.pdf" "$linearized_pdf"
+qpdf --linearize --recompress-flate --compression-level=9 \
+  "out/${root}.pdf" "$linearized_pdf"
 cp "$linearized_pdf" "${outname}.pdf"
 echo "created ${outname}.pdf"

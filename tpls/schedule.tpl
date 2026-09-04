@@ -1,4 +1,4 @@
-\myUnderline{Schedule\textcolor{white}{g}}\vskip-\myLenLineThicknessDefault
+\myUnderline{Schedule\phantom{g}}\vskip-\myLenLineThicknessDefault
 
 {{range $hour := .Day.Hours .Cfg.Layout.Numbers.DailyBottomHour .Cfg.Layout.Numbers.DailyBottomHourEnd -}}
 \myLineHeightButLine%

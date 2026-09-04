@@ -1,9 +1,17 @@
 \ExplSyntaxOn
 \cs_new_eq:NN \Repeat \prg_replicate:nn
+\cs_new:Npn \myDimToBp #1 { \dim_to_decimal_in_bp:n {#1} }
+\tl_new:N \l__planner_dot_color_tl
+\cs_new_protected:Npn \mySetDotColor #1
+  {
+    \tl_set:Nx \l__planner_dot_color_tl {#1}
+    \tl_replace_all:Nnn \l__planner_dot_color_tl {,} {~}
+    \cs_gset:Npx \myDotPdfColor { \tl_use:N \l__planner_dot_color_tl }
+  }
 \ExplSyntaxOff
 
 \NewDocumentCommand{\myMinLineHeight}{m}{\parbox{0pt}{\vskip#1}}
-\NewDocumentCommand{\myDummyQ}{}{\textcolor{white}{Q}}
+\NewDocumentCommand{\myDummyQ}{}{\phantom{Q}}
 
 {{- $numbers := .Cfg.Layout.Numbers -}}
 \newcommand{\myNumArrayStretch}{ {{- $numbers.ArrayStretch -}} }
@@ -81,6 +89,9 @@
 \newcommand{\myColorDots}{ {{- .Cfg.Layout.Colors.Dots -}} }
 \newcommand{\myColorBackgroundShading}{ {{- .Cfg.Layout.Colors.BackgroundShading -}} }
 
+\convertcolorspec{named}{\myColorDots}{rgb}\myDotRgb
+\mySetDotColor{\myDotRgb}
+
 \newcommand{\myLinePlain}{\hrule width \linewidth height \myLenLineThicknessDefault}
 \newcommand{\myLineThick}{\hrule width \linewidth height \myLenLineThicknessThick}
 
@@ -98,23 +109,27 @@
 
 % \myDotFill{<height>} fills <height> with a dot grid. The dot pitch is
 % \myLenLineHeightButLine in both directions, so the dots align with the
-% ruled areas. The grid spans the current \hsize. <height> takes a rigid
-% length or stretch glue such as \fill. \cleaders emits whole rows only,
-% so a partial row never overflows the given space.
+% ruled areas. <height> takes a rigid length or stretch glue such as \fill.
+% The horizontal and vertical leaders emit whole cells and rows only.
 \NewDocumentCommand{\myDotFill}{m}{%
   \begingroup
   \ifhmode\par\fi
   \hrule height 0pt
   \nobreak
-  % One cell: a dot on the bottom edge of a square with the dot pitch as side.
-  \setbox0=\hbox to \myLenLineHeightButLine{%
-    \hss
-    \textcolor{\myColorDots}{\vrule width \myLenDotDiameter height .5\myLenDotDiameter depth .5\myLenDotDiameter}%
-    \hss
+  % Limit the dotted rule to the same number of complete cells as \leaders.
+  \count0=\hsize
+  \count2=\myLenLineHeightButLine
+  \divide\count0 by \count2
+  \dimen0=\dimexpr\count0\myLenLineHeightButLine\relax
+  \setbox1=\hbox to \hsize{%
+    \special{pdf:content
+      \myDotPdfColor RG 2 J
+      \myDimToBp{\myLenDotDiameter} w
+      [0 \myDimToBp{\myLenLineHeightButLine}] 0 d
+      \myDimToBp{.5\myLenLineHeightButLine} 0 m
+      \myDimToBp{\dimexpr\dimen0-.5\myLenLineHeightButLine} 0 l S}%
+    \hfil
   }%
-  \ht0=\myLenLineHeightButLine
-  \dp0=0pt
-  \setbox1=\hbox to \hsize{\leaders\copy0\hfil}%
   \ht1=\myLenLineHeightButLine
   \dp1=0pt
   \cleaders\copy1\vskip #1 \hbox{}%

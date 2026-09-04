@@ -34,7 +34,7 @@
 \usepackage{hyperref}
 
 \hypersetup{
-    {{- if not .Cfg.Debug.ShowLinks}}hidelinks=true{{end -}}
+    {{- if not .Cfg.Debug.ShowLinks}}hidelinks{{end -}}
 }
 
 
