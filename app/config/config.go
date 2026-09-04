@@ -20,6 +20,7 @@ type Config struct {
 	ClearTopLeftCorner          bool
 	AMPMTime                    bool
 	AddLastHalfHour             bool
+	ShowDailySchedule           bool
 	ScheduleIncludeWorkingHours bool
 	WeeklyCalendarCheckTodo     bool
 	WeeklyCalendarCheckTodoDay  time.Weekday

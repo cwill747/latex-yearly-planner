@@ -5,6 +5,7 @@ cleartopleftcorner: true
 dotted: true
 calafterschedule: false
 addlasthalfhour: true
+showdailyschedule: true
 scheduleincludeworkinghours: true
 weeklycalendarchecktodo: false
 weeklycalendarchecktododay: 1
