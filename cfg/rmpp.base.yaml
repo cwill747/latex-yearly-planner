@@ -11,15 +11,10 @@ layout:
       right: 0.2cm
 
   numbers:
-    quarterlylines: 52
     weeklylines: 11
     dailytodos: 4
-    dailynotes: 31
     dailydiarylog: 27
     notesonpage: 37
-    dotheightfull: 38
-    dotwidthtwothirds: 21
-    dotwidthfull: 40
     columnsforday: 4
   lengths:
     notesindexcellheight: 1.45cm

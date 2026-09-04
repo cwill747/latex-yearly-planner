@@ -14,33 +14,18 @@
 % Color and graphics
 \usepackage[table]{xcolor}
 \usepackage{graphicx}
-\usepackage{tikz}
 \usepackage{adjustbox}
 
 % Table and array packages
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{multirow}
-\usepackage{makecell}
 
 % Layout and spacing
-\usepackage{setspace}
-\usepackage{leading}
-\usepackage{dashrule}
-\usepackage{varwidth}
-\usepackage{wrapfig}
 \usepackage{marginnote}
-\usepackage{fancyhdr}
 
 % Math and symbols
-\usepackage{mathtools}
 \usepackage{amssymb}
-
-% Special features
-\usepackage{multido}
-\usepackage{pgffor}
-\usepackage[most]{tcolorbox}
-\usepackage{blindtext}
 
 % Debug packages (conditional)
 {{if $.Cfg.Debug.ShowFrame}}\usepackage{showframe}{{end}}
@@ -49,7 +34,7 @@
 \usepackage{hyperref}
 
 \hypersetup{
-    {{- if not .Cfg.Debug.ShowLinks}}hidelinks=true{{end -}}
+    {{- if not .Cfg.Debug.ShowLinks}}hidelinks{{end -}}
 }
 
 

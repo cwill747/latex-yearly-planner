@@ -1,50 +1,111 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Build a planner PDF.
+#
+# Usage:
+#   ./build.sh [options] [device|cfg-list] [year]
+#
+# The first argument selects a device preset or gives a comma-separated
+# list of cfg files. The second argument selects the planner year.
+# With no arguments, the script builds the rmpp preset for the next year.
+#
+# Options:
+#   -p         Preview mode: emit one page for each unique layout.
+#   -c FILES   Append extra cfg files (comma-separated) to the list.
+#   -t LANG    Translate the planner with translations/<LANG>.json.
+#   -o NAME    Name the output PDF <NAME>.pdf.
+#   -h         Show this help text.
+#
+# Environment:
+#   PLANNERGEN_BINARY   Use a pre-built plannergen instead of "go run".
 
-# If no target year is passed in though argv[0], use next year as default value
-if [ $# -eq 1 ]; then
-    TARGET_YEAR=$1
+set -euo pipefail
+
+declare -A DEVICE_CFGS=(
+  [rmpp]="cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml"
+  [rm2]="cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rm2.base.yaml,cfg/rm2.breadcrumb.default.dailycal.yaml"
+  [sn_a5x]="cfg/base.yaml,cfg/template_months_on_side.yaml,cfg/sn_a5x.mos.default.yaml,cfg/sn_a5x.mos.default.dailycal.yaml"
+  [sn_a6x]="cfg/base.yaml,cfg/template_months_on_side.yaml,cfg/sn_a6x.mos.default.yaml"
+  [kscribe]="cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/kscribe.breadcrumb.default.yaml,cfg/kscribe.breadcrumb.default.dailycal.yaml"
+)
+
+usage() {
+  sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+preview=""
+extra_cfg=""
+translation=""
+outname=""
+
+while getopts "pc:t:o:h" opt; do
+  case "$opt" in
+    p) preview="--preview" ;;
+    c) extra_cfg="$OPTARG" ;;
+    t) translation="$OPTARG" ;;
+    o) outname="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+device="${1:-rmpp}"
+year="${2:-$(($(date +%Y) + 1))}"
+
+if [[ -n "${DEVICE_CFGS[$device]:-}" ]]; then
+  cfg="${DEVICE_CFGS[$device]}"
 else
-    TARGET_YEAR=$(expr $(date +"%Y") + 1)
+  case "$device" in
+    *.yaml|*.yml) cfg="$device" ;;
+    *)
+      echo "unknown device '$device'; known: ${!DEVICE_CFGS[*]}" >&2
+      exit 2
+      ;;
+  esac
 fi
 
-if [ -z "$CONFIG_FILES" ]; then
-  CONFIG_FILES='cfg/base.yaml,cfg/template_months_on_side.yaml,cfg/sn_a5x.mos.default.yaml,cfg/sn_a5x.mos.default.dailycal.yaml'
+if [[ -n "$extra_cfg" ]]; then
+  cfg="$cfg,$extra_cfg"
 fi
 
-NAME="planner.${TARGET_YEAR}"
+# plannergen names the root .tex file after the last cfg file.
+root="$(basename "${cfg##*,}")"
+root="${root%.yaml}"
+root="${root%.yml}"
 
-printf "📅 Building $(pwd)/${NAME}.pdf - "
+outname="${outname:-planner.${device##*/}.${year}}"
 
-PLANNER_YEAR=${TARGET_YEAR} PASSES=2 CFG=${CONFIG_FILES} NAME=${NAME} ./single.sh >/tmp/$NAME.log &
-BUILDER_PID=$!
+echo "building ${outname}.pdf (cfg: ${cfg})"
 
-tail --pid=$BUILDER_PID -f /tmp/$NAME.log | python3 parser.py &
-OUTPUT_PID=$!
+PLANNER_YEAR="$year" ${PLANNERGEN_BINARY:-go run cmd/plannergen/plannergen.go} \
+  $preview --config "$cfg"
 
+if [[ -n "$translation" ]]; then
+  python3 translate.py "$translation"
+fi
 
-_exit() {
-    if [[ "${STATUS_BUILDER}" -eq 0 && "${STATUS_OUTPUT}" -eq 0 ]]; then
-        echo "✅"
-        echo "🎉 Successfully built the calendar for ${TARGET_YEAR} 🎉"
-    else
-        echo "❌"
-        echo "⚠️ Error during build process ⚠️"
-    fi
+# Give each run its own cache so parallel builds do not clash,
+# and so the nix sandbox has a writable fontconfig cache.
+XDG_CACHE_HOME="$(mktemp -d)"
+export XDG_CACHE_HOME
+linearized_pdf="$(mktemp --suffix=.pdf)"
+cleanup() {
+  rm -rf "$XDG_CACHE_HOME"
+  rm -f "$linearized_pdf"
 }
+trap cleanup EXIT
 
-_term() {
-    kill -9 $BUILDER_PID $OUTPUT_PID >/dev/null 2>&1
-    # Also kill pdflatex child process
-    kill -9 $(ps -e -o pid,comm | grep pdflatex | awk '{print $1}') 1>/dev/null 2>&1
-    _exit
-}
+# latexmk reruns xelatex until cross-references are stable.
+latexmk -xelatex \
+  -interaction=nonstopmode \
+  -file-line-error \
+  -output-directory=out \
+  "out/${root}.tex"
 
-trap _term EXIT
-
-STATUS_OUTPUT=1
-wait $OUTPUT_PID
-STATUS_OUTPUT=$?
-
-STATUS_BUILDER=1
-wait $BUILDER_PID
-STATUS_BUILDER=$?
+# Put each page near the objects that it references. This reduces random access
+# when resource-constrained PDF readers open and render the planner.
+qpdf --linearize --recompress-flate --compression-level=9 \
+  "out/${root}.pdf" "$linearized_pdf"
+cp "$linearized_pdf" "${outname}.pdf"
+echo "created ${outname}.pdf"

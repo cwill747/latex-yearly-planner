@@ -12,18 +12,16 @@
 \parbox{\myLenTriCol}{\myUnderline{ {{- $day2.WeekLink -}} }}%
 \hspace{\myLenTriColSep}%
 \parbox{\myLenTriCol}{\myUnderline{ {{- $day3.WeekLink -}} }}
-\myMash{\myNumWeeklyLines}{\myNumDotWidthFull}
-\vfill
+\myDotFill{\stretch{1}}
 
 \parbox{\myLenTriCol}{\myUnderline{ {{- $day4.WeekLink -}} }}%
 \hspace{\myLenTriColSep}%
 \parbox{\myLenTriCol}{\myUnderline{ {{- $day5.WeekLink -}} }}%
 \hspace{\myLenTriColSep}%
 \parbox{\myLenTriCol}{\myUnderline{ {{- $day6.WeekLink -}} }}
-\myMash{\myNumWeeklyLines}{\myNumDotWidthFull}
-\vfill
+\myDotFill{\stretch{1}}
 
 \parbox{\myLenTriCol}{ \myUnderline{ {{- $day7.WeekLink -}} }}%
 \hspace{\myLenTriColSep}%
 \parbox{\dimexpr2\myLenTriCol+\myLenTriColSep}{\myUnderline{Notes\myDummyQ}}
-\myMash{\myNumWeeklyLines}{\myNumDotWidthFull}
+\myDotFill{\stretch{1}}

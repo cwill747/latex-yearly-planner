@@ -20,6 +20,7 @@ type Config struct {
 	ClearTopLeftCorner          bool
 	AMPMTime                    bool
 	AddLastHalfHour             bool
+	ShowDailySchedule           bool
 	ScheduleIncludeWorkingHours bool
 	WeeklyCalendarCheckTodo     bool
 	WeeklyCalendarCheckTodoDay  time.Weekday
@@ -75,31 +76,22 @@ type Layout struct {
 }
 
 type Numbers struct {
-	ArrayStretch        float64
-	QuarterlyLines      int
-	WeeklyLines         int
-	DailyTodos          int
-	DailyNotes          int
-	DailyPersonal       int
-	DailyBottomHour     int
-	DailyBottomHourEnd  int
-	DailyTopHourStart   int
-	DailyTopHour        int
-	DailyBusBottomHour  int
-	DailyBusTopHour     int
-	DailyDiaryGoals     int
-	DailyDiaryGrateful  int
-	DailyDiaryBest      int
-	DailyDiaryLog       int
-	TodoLinesInTodoPage int
-	IndexMeetingNotes   int
-	NotesIndexPages     int
-	MeetingsIndexPages  int
-	NotesOnPage         int
-	DotHeightFull       int
-	DotWidthFull        int
-	DotWidthTwoThirds   int
-	ColumnsForDay       int
+	ArrayStretch       float64
+	WeeklyLines        int
+	DailyTodos         int
+	DailyBottomHour    int
+	DailyBottomHourEnd int
+	DailyTopHourStart  int
+	DailyTopHour       int
+	DailyBusBottomHour int
+	DailyBusTopHour    int
+	DailyDiaryGrateful int
+	DailyDiaryBest     int
+	DailyDiaryLog      int
+	NotesIndexPages    int
+	MeetingsIndexPages int
+	NotesOnPage        int
+	ColumnsForDay      int
 }
 
 type Paper struct {

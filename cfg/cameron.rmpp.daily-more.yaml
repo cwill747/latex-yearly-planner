@@ -1,0 +1,29 @@
+pages:
+  - name: title
+    renderblocks:
+      - funcname: title
+        tpls: [title.tpl]
+  - name: annual
+    renderblocks:
+      - funcname: annual
+        tpls: [cameron_annual.tpl]
+  - name: quarterly
+    renderblocks:
+      - funcname: quarterly
+        tpls: [cameron_quarterly.tpl]
+  - name: monthly
+    renderblocks:
+      - funcname: monthly
+        tpls: [breadcrumb_03_monthly.tpl]
+  - name: weekly
+    renderblocks:
+      - funcname: weekly
+        tpls: [breadcrumb_04_weekly.tpl]
+  - name: daily
+    renderblocks:
+      - funcname: daily
+        tpls: [cameron_daily.tpl]
+  - name: daily_notes
+    renderblocks:
+      - funcname: daily_notes
+        tpls: [breadcrumb_07_daily_notes.tpl]

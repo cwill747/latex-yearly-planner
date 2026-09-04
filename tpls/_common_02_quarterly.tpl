@@ -7,6 +7,5 @@
 \end{minipage}%
 \hspace{\myLenTriColSep}%
 \begin{minipage}[t][\remainingHeight]{\dimexpr2\myLenTriCol+\myLenTriColSep}
-  \vskip-\myLenLineHeightButLine
-  \vbox to 0pt{\myMash[\myQuarterlySpring]{\myNumQuarterlyLines}{\myNumDotWidthTwoThirds}}
+  \myDotFill{\fill}
 \end{minipage}

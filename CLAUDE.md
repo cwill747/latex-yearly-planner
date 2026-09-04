@@ -18,19 +18,17 @@ Use the [GitHub workflow](https://github.com/cwill747/latex-yearly-planner/actio
 nix develop
 ```
 
-**Build a planner:**
+**Build a planner (device preset + year):**
 ```bash
-nix develop -c bash -c "PLANNER_YEAR=2025 PASSES=1 CFG='cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml' NAME='rmpp.breadcrumb' ./single.sh"
+nix develop -c ./build.sh rmpp 2027
 ```
 
-**Quick build with default config:**
+**Build from an explicit cfg list:**
 ```bash
-nix develop -c ./build.sh 2025
+nix develop -c ./build.sh 'cfg/base.yaml,cfg/template_breadcrumb.yaml,cfg/rmpp.base.yaml,cfg/rmpp.breadcrumb.default.dailycal.yaml' 2027
 ```
 
-**Device-specific shortcuts:**
-- reMarkable 2: `nix develop -c ./rm2.sh`  
-- reMarkable Paper Pro: `nix develop -c ./rmpp.sh`
+Run `./build.sh -h` for all options (`-p` preview, `-c` extra cfg files, `-t` translation, `-o` output name). latexmk decides how many XeLaTeX passes to run.
 
 **Run tests:**
 ```bash
@@ -100,7 +98,7 @@ The configuration is built from layered YAML files in the `cfg/` directory:
 2. The Go application generates LaTeX `.tex` files in the `out/` directory
 3. Optional translation is applied via Python script
 4. XeLaTeX compiles the `.tex` files into final PDF
-5. Multiple passes ensure proper LaTeX cross-references and layout
+5. latexmk reruns XeLaTeX until cross-references are stable
 
 ### Translation Support
 

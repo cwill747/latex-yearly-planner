@@ -8,7 +8,7 @@ import (
 )
 
 func MeetingsIndexed(cfg config.Config, tpls []string) (page.Modules, error) {
-	index := meeting.NewIndex(cfg.Year, cfg.Layout.Numbers.NotesOnPage, cfg.Layout.Numbers.NotesIndexPages)
+	index := meeting.NewIndex(cfg.Year, cfg.Layout.Numbers.NotesOnPage, cfg.Layout.Numbers.MeetingsIndexPages)
 	year := cal.NewYear(cfg.WeekStart, cfg.Year, cfg.Example)
 	modules := make(page.Modules, 0, 1)
 
