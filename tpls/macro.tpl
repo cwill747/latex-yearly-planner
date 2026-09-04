@@ -107,11 +107,10 @@
 \NewDocumentCommand{\myTodoLineGray}{}{\myLineHeightButLine$\square$\myLineGray}
 \NewDocumentCommand{\myTodoLineFilled}{m}{\myLineHeightButLine$\square$ #1\myLineGray}
 
-% \myDotFill{<height>} fills <height> with a dot grid. The dot pitch is
-% \myLenLineHeightButLine in both directions, so the dots align with the
-% ruled areas. <height> takes a rigid length or stretch glue such as \fill.
-% The horizontal and vertical leaders emit whole cells and rows only.
-\NewDocumentCommand{\myDotFill}{m}{%
+% \myDotFill[<extra columns>]{<height>} fills <height> with a dot grid.
+% The vertical pitch matches the ruled areas. Extra columns reduce only the
+% horizontal pitch so the grid continues to fit the available width.
+\NewDocumentCommand{\myDotFill}{O{0}m}{%
   \begingroup
   \ifhmode\par\fi
   \hrule height 0pt
@@ -120,19 +119,27 @@
   \count0=\hsize
   \count2=\myLenLineHeightButLine
   \divide\count0 by \count2
-  \dimen0=\dimexpr\count0\myLenLineHeightButLine\relax
+  \ifnum#1>0
+    \advance\count0 by #1
+    \dimen0=\hsize
+    \dimen2=\hsize
+    \divide\dimen2 by \count0
+  \else
+    \dimen0=\dimexpr\count0\myLenLineHeightButLine\relax
+    \dimen2=\myLenLineHeightButLine
+  \fi
   \setbox1=\hbox to \hsize{%
     \special{pdf:content
       \myDotPdfColor RG 2 J
       \myDimToBp{\myLenDotDiameter} w
-      [0 \myDimToBp{\myLenLineHeightButLine}] 0 d
-      \myDimToBp{.5\myLenLineHeightButLine} 0 m
-      \myDimToBp{\dimexpr\dimen0-.5\myLenLineHeightButLine} 0 l S}%
+      [0 \myDimToBp{\dimen2}] 0 d
+      \myDimToBp{.5\dimen2} 0 m
+      \myDimToBp{\dimexpr\dimen0-.5\dimen2} 0 l S}%
     \hfil
   }%
   \ht1=\myLenLineHeightButLine
   \dp1=0pt
-  \cleaders\copy1\vskip #1 \hbox{}%
+  \cleaders\copy1\vskip #2 \hbox{}%
   \endgroup
 }
 
