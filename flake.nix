@@ -28,6 +28,7 @@
         texDeps = with pkgs; [
           python3 # used by translate.py
           fira # FiraSans font
+          qpdf # linearize PDFs for faster page access on e-ink devices
           (texlive.combine {
             inherit (texlive)
               metafont

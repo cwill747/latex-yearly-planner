@@ -44,6 +44,7 @@ Then build a planner with `build.sh`:
 ```
 
 Run `./build.sh -h` for all options. The PDF lands in the project root.
+The build linearizes the PDF for faster page access on e-ink devices.
 `nix build .#pdfs --impure` creates the rmpp and rm2 planners for the
 current and next year without a dev shell. `--impure` lets the
 derivation read the current date.

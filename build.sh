@@ -89,7 +89,12 @@ fi
 # and so the nix sandbox has a writable fontconfig cache.
 XDG_CACHE_HOME="$(mktemp -d)"
 export XDG_CACHE_HOME
-trap 'rm -rf "$XDG_CACHE_HOME"' EXIT
+linearized_pdf="$(mktemp --suffix=.pdf)"
+cleanup() {
+  rm -rf "$XDG_CACHE_HOME"
+  rm -f "$linearized_pdf"
+}
+trap cleanup EXIT
 
 # latexmk reruns xelatex until cross-references are stable.
 latexmk -xelatex \
@@ -98,5 +103,8 @@ latexmk -xelatex \
   -output-directory=out \
   "out/${root}.tex"
 
-cp "out/${root}.pdf" "${outname}.pdf"
+# Put each page near the objects that it references. This reduces random access
+# when resource-constrained PDF readers open and render the planner.
+qpdf --linearize "out/${root}.pdf" "$linearized_pdf"
+cp "$linearized_pdf" "${outname}.pdf"
 echo "created ${outname}.pdf"
